@@ -5,6 +5,11 @@
       return action.payload;
     case "CREATE":
       return [...posts,action.payload];
+    case "UPDATE":
+    case "LIKE":
+      return posts.map(item=>item._id === action.payload._id ? action.payload : item)
+    case "DELETE":
+        return posts.filter(item=>item._id  !== action.payload)
     default:
       return posts;
   }

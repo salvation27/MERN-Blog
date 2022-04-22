@@ -1,16 +1,18 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import RedBar from "../../components/RedBar/RedBar";
 import FileBase from 'react-file-base64';
-import { useDispatch } from "react-redux";
-import {createPost} from '../../store/actions/posts'
+import { useDispatch,useSelector} from "react-redux";
+import {createPost,updatePost} from '../../store/actions/posts'
 import { toast } from 'react-toastify';
+import { useHistory } from "react-router-dom"
 
 
-const Form = () => {
 
+const Form = ({currentId,setCurrentId}) => {
+  const history = useHistory()
   const dispatch = useDispatch()
 
   const [postData, setPostData] = useState({
@@ -21,22 +23,61 @@ const Form = () => {
     selectedFile: "",
   });
 
+
+  const post = useSelector(state=> currentId ? state.posts.find(p=>p._id ===currentId):null)
+
+console.log('currentId',currentId)
+    useEffect(()=>{
+    if(post) setPostData(post)
+    },[post])
+
   const handleSubmit = (e) => {
     e.preventDefault()
-    dispatch(createPost(postData))
-    toast.success('Карточка создана', {
-      position: "top-right",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      });
+    if(currentId) {
+      dispatch(updatePost(currentId,postData))
+      toast.success('Карточка обновлена', {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        });
+    } else {
+      dispatch(createPost(postData))
+      toast.success('Карточка создана', {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        });
+    }
+    clear()
+    history.push("/posts");
   };
 
 const clear = () => {
-  console.log('очистка')
+  setCurrentId(null)
+  setPostData({
+    creator: "",
+    title: "",
+    message: "",
+    tags: "",
+    selectedFile: "",
+  })
+  toast.success('форма очищена', {
+    position: "top-right",
+    autoClose: 5000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    });
 }
 
 
@@ -55,7 +96,7 @@ const clear = () => {
           marginTop: "30px",
         }}
       >
-        <h2 style={{ textAlign: "center" }}>Create Post</h2>
+        <h2 style={{ textAlign: "center" }}>{currentId ? 'Update':'Create'}Post</h2>
         <TextField
           value={postData.creator}
           onChange={(e) =>
@@ -96,7 +137,7 @@ const clear = () => {
         <TextField
           value={postData.tags}
           onChange={(e) =>
-            setPostData({ ...postData, tags:e.target.value })
+            setPostData({ ...postData, tags:e.target.value.split(',') })
           }
           fullWidth
           label="Tags"
@@ -112,7 +153,7 @@ const clear = () => {
          />
          <RedBar />
         <Button type="submit" fullWidth variant="contained" disableElevation>
-          Register
+        {currentId ? 'Update':'Create'} Post
         </Button>
         <RedBar />
         <Button  fullWidth variant="contained" onClick={clear} disableElevation>

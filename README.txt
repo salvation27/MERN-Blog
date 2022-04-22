@@ -18,3 +18,20 @@ https://www.youtube.com/watch?v=ngc9gnGgUdA&list=PL6QREj8te1P7VSwhrMf3D3Xt4V6_SR
 
 
 53.53
+
+задний фон генератор   https://www.svgbackgrounds.com/
+
+
+
+Последовательность действий в связке: node react redux
+
+1)server - routes 
+2)server - controllers 
+3)client - api 
+4)client - actions
+5)client - reducer
+6)client - компонент в котором нужно достать диспатч и в диспатч передать функцию єкшен
+
+22.27    /2часть
+
+55.36
