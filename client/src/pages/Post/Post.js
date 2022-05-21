@@ -61,7 +61,7 @@ const likedPost = () => {
       <Card style={{background:'#ccc'}} sx={{ width: 345 }}>
         <CardActionArea>
         <Typography gutterBottom variant="h5" component="div">
-              {item.creator}
+             <span>author:</span> {item.creator}
             </Typography>
           <CardMedia
             component="img"
